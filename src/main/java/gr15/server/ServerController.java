@@ -12,28 +12,11 @@ public class ServerController {
 
     //host Game
     @PostMapping(value = "/game")
-    public ResponseEntity<String> createGame(@RequestBody String str){
-        String newServerID = RoboRallyService.hostServer(str);
-        if (newServerID == null) //something went wrong
+    public ResponseEntity<String> createGame(){
+        String newServerID = RoboRallyService.hostServer();
+        if (newServerID == null)
             return ResponseEntity.internalServerError().body("Server couldn't start");
         return ResponseEntity.ok().body(newServerID);
-    }
-
-    //listOfGame
-    @GetMapping(value = "/game")
-    public ResponseEntity<String> listOfGame(){
-        return ResponseEntity.ok().body(RoboRallyService.listOfSavedGames());
-    }
-
-    //Join game
-    @PutMapping(value = "/game/{id}")
-    public ResponseEntity<String> joinGame(@PathVariable String id){
-        String response = RoboRallyService.joinGame(id);
-        if (response.equals("Server doesn't exist"))
-            return ResponseEntity.status(404).body(response);
-
-        return ResponseEntity.ok().body(response);
-
     }
 
     @GetMapping(value = "/gameState/{id}")
@@ -47,5 +30,21 @@ public class ServerController {
     {
         RoboRallyService.updateGame(id,g);
         return ResponseEntity.ok().body("ok");
+    }
+
+    String jsonBoard = "";
+
+    @PostMapping(value = "/board")
+    public void setWholeGame(@RequestBody String jsonBoard){
+        this.jsonBoard = jsonBoard;
+    }
+
+    @GetMapping(value = "/board")
+    public String getWholeGame(){
+        if(jsonBoard.equals("")){
+            return "Board is empty, you have not yet changed anything in play!";
+        }else{
+            return jsonBoard;
+        }
     }
 }
