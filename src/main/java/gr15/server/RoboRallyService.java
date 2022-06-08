@@ -10,7 +10,7 @@ public class RoboRallyService implements IRoboRallyService {
     private int id = 0;
 
     @Override
-    public Server findServer(String serverId){
+    public Server findServerById(String serverId){
         for (Server server : servers) {
             if (Objects.equals(server.getGameId(), serverId)) {
                 return server;
@@ -21,13 +21,13 @@ public class RoboRallyService implements IRoboRallyService {
 
     @Override
     public void updateGame(String id, String gameState) {
-        Server server = findServer(id);
-        server.setGameState(gameState);
+        Server server = findServerById(id);
+        server.setStateOfGame(gameState);
     }
 
     @Override
     public String getGameState(String serverId) {
-        return (findServer(serverId).getGameState());
+        return (findServerById(serverId).getGameState());
     }
 
     @Override

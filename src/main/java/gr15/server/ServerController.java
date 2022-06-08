@@ -10,27 +10,27 @@ public class ServerController {
     @Autowired
     private IRoboRallyService RoboRallyService;
 
-    //host Game
     @PostMapping(value = "/game")
     public ResponseEntity<String> createGame(){
-        String newServerID = RoboRallyService.hostServer();
-        if (newServerID == null)
-            return ResponseEntity.internalServerError().body("Server couldn't start");
-        return ResponseEntity.ok().body(newServerID);
+        String newServer = RoboRallyService.hostServer();
+        if (newServer == null)
+            return ResponseEntity.internalServerError().body("There is an error with hosting a server!");
+        return ResponseEntity.ok().body(newServer);
     }
 
-    @GetMapping(value = "/gameState/{id}")
-    public ResponseEntity<String> getGameState(@PathVariable String id)
-    {
-        return ResponseEntity.ok().body(RoboRallyService.getGameState(id));
+    String jsonUpdate;
+
+    @PostMapping(value = "/stateOfGame")
+    public void updateStateOfGame(@RequestBody String jsonUpdate){
+        this.jsonUpdate = jsonUpdate;
+        RoboRallyService.updateGame("0", jsonUpdate);
     }
 
-    @PutMapping(value = "/gameState/{id}")
-    public ResponseEntity<String> setGameState(@PathVariable String id, @RequestBody String g)
-    {
-        RoboRallyService.updateGame(id,g);
-        return ResponseEntity.ok().body("ok");
+    @GetMapping(value = "/stateOfGame")
+    public String getJsonUpdate(){
+        return jsonUpdate;
     }
+
 
     String jsonBoard = "";
 
