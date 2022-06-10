@@ -31,20 +31,17 @@ public class ServerController {
         return jsonUpdate;
     }
 
-
-    String jsonBoard = "";
-
     @PostMapping(value = "/board")
     public void setWholeGame(@RequestBody String jsonBoard){
-        this.jsonBoard = jsonBoard;
+        RoboRallyService.findServerById("0").setWholeGame(jsonBoard);
     }
 
     @GetMapping(value = "/board")
     public String getWholeGame(){
-        if(jsonBoard.equals("")){
+        if(RoboRallyService.findServerById("0").getWholeGame().equals("")){
             return "Board is empty, you have not yet changed anything in play!";
         }else{
-            return jsonBoard;
+            return RoboRallyService.findServerById("0").getWholeGame();
         }
     }
 }
